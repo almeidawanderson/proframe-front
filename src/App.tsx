@@ -1,26 +1,58 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { Dashboard } from "./components/Dashboard";
+import { Header } from "./components/Header";
+import { GlobalStyle } from "./styles/global";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Modal from 'react-modal'
+import { NewProjectModal } from "./components/NewProjectModal";
+import { ProjectsContext, ProjectsProvider } from "./ProjectContext";
+
+Modal.setAppElement('#root')
+
+interface ProjectItem {
+  description: string;
+  cost: number;
 }
 
-export default App;
+interface Project {
+  name: string;
+  description: string;
+  items: ProjectItem[];
+}
+
+
+export function App() {
+
+  const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false)
+  
+
+
+  function handleOpenNewProjectModal() {
+    setIsNewProjectModalOpen(true)
+  }
+
+  function handleCloseNewProjectModal() {
+    setIsNewProjectModalOpen(false)
+  }  
+ 
+  return (
+    <ProjectsProvider>
+      < Header 
+      onOpenNewProjectModal={handleOpenNewProjectModal}
+      />
+
+      < Dashboard />
+
+      <NewProjectModal 
+        isOpen={isNewProjectModalOpen}
+        onRequestClose={handleCloseNewProjectModal}
+      />
+
+    
+      <GlobalStyle />   
+      </ProjectsProvider>
+
+)
+  }
+
+
